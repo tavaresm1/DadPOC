@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "11qCFbK9PXw=",
+  "success": true,
+  "projectFilePath": "/home/mtavares/Git/DadPOC/CruiseSurvey/CruiseSurvey.csproj",
+  "expectedPackageFiles": [
+    "/home/mtavares/.nuget/packages/microsoft.netcore.app.ref/8.0.26/microsoft.netcore.app.ref.8.0.26.nupkg.sha512",
+    "/home/mtavares/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.26/microsoft.aspnetcore.app.ref.8.0.26.nupkg.sha512",
+    "/home/mtavares/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.26/microsoft.netcore.app.host.linux-x64.8.0.26.nupkg.sha512"
+  ],
+  "logs": []
+}
