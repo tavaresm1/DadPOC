@@ -1,0 +1,67 @@
+======================================================
+           CRUISE EXPERIENCE SURVEY RESULTS            
+======================================================
+
+PERSONAL INFORMATION
+-------------------------------------------------------
+  Name:             Deb Tav
+  Email:            someone@gmail.com
+  Age Range:        65+
+  Cruise Ship:      Ferry Ship 4Ever
+  Departure Date:   April 01, 2026
+  Number of Nights: 10
+  Survey Completed: May 01, 2026 12:25 PM
+
+SURVEY RESPONSES
+-------------------------------------------------------
+  Q1. Overall Experience
+      "How would you rate your overall cruise experience?"
+      Rating: 5/5
+
+  Q2. Cabin & Accommodations
+      "How satisfied were you with your cabin and accommodations?"
+      Rating: 4/5
+
+  Q3. Dining Experience
+      "How would you rate the quality of the food and dining options?"
+      Rating: 2/5
+
+  Q4. Entertainment & Activities
+      "How would you rate the onboard entertainment and activities?"
+      Rating: 5/5
+      Comment: Got to meet a lot of my fellow Ferries and the best way :-)
+
+  Q5. Staff & Service
+      "How would you rate the friendliness and helpfulness of the crew?"
+      Rating: 5/5
+      Comment: They did a great job helping when we needed something cleaned or getting our outfits on
+
+  Q6. Cleanliness
+      "How would you rate the cleanliness of the ship and facilities?"
+      Rating: 4/5
+
+  Q7. Shore Excursions
+      "How satisfied were you with the ports of call and shore excursions?"
+      Rating: 5/5
+
+  Q8. Value for Money
+      "How would you rate the overall value for the price you paid?"
+      Rating: 4/5
+
+  Q9. Embarkation & Debarkation
+      "How smooth was the boarding and departure process?"
+      Rating: 4/5
+
+  Q10. Likelihood to Recommend
+      "How likely are you to recommend this cruise to a friend or family member?"
+      Rating: 5/5
+      Comment: I hope to bring more friends next time and make more friends
+
+-------------------------------------------------------
+  OVERALL AVERAGE SCORE: 4.3 / 5.0
+
+  SENTIMENT: Positive - Guest was generally satisfied with their cruise.
+
+=======================================================
+  End of Survey Report
+=======================================================

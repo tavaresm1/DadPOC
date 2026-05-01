@@ -54,11 +54,13 @@ public class DockerSqlServerService
 
     private static async Task WaitForSqlServerReady(ILogger logger, int maxRetries = 30)
     {
+        var sqlcmdPath = await DetectSqlcmdPath(logger);
+
         for (int i = 0; i < maxRetries; i++)
         {
             await Task.Delay(2000);
             var result = await RunDockerCommand(
-                $"exec {ContainerName} /opt/mssql-tools2/bin/sqlcmd -S localhost -U sa -P \"{SaPassword}\" -Q \"SELECT 1\" -C",
+                $"exec {ContainerName} {sqlcmdPath} -S localhost -U sa -P \"{SaPassword}\" -Q \"SELECT 1\" -C",
                 throwOnError: false);
 
             if (result.Contains("1"))
@@ -70,6 +72,33 @@ public class DockerSqlServerService
         }
 
         throw new TimeoutException($"MSSQL did not become ready after {maxRetries} attempts.");
+    }
+
+    private static async Task<string> DetectSqlcmdPath(ILogger logger)
+    {
+        string[] candidates =
+        {
+            "/opt/mssql-tools18/bin/sqlcmd",
+            "/opt/mssql-tools2/bin/sqlcmd",
+            "/opt/mssql-tools/bin/sqlcmd",
+        };
+
+        foreach (var path in candidates)
+        {
+            var result = await RunDockerCommand(
+                $"exec {ContainerName} test -f {path}", throwOnError: false);
+            var check = await RunDockerCommand(
+                $"exec {ContainerName} sh -c \"test -f {path} && echo found\"", throwOnError: false);
+
+            if (check.Contains("found"))
+            {
+                logger.LogInformation("Found sqlcmd at {Path}", path);
+                return path;
+            }
+        }
+
+        logger.LogWarning("Could not detect sqlcmd path, defaulting to /opt/mssql-tools18/bin/sqlcmd");
+        return "/opt/mssql-tools18/bin/sqlcmd";
     }
 
     private static async Task<string> RunDockerCommand(string arguments, bool throwOnError = true)
