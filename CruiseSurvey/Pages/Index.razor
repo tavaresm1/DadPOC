@@ -1,0 +1,282 @@
+@page "/"
+@inject SurveyService SurveyService
+
+<!-- Progress Bar -->
+<div class="progress-section">
+    <div class="step-labels">
+        <span class="@StepClass(1)">1. Personal Info</span>
+        <span class="@StepClass(2)">2. Survey Questions</span>
+        <span class="@StepClass(3)">3. Complete</span>
+    </div>
+    <div class="progress-track">
+        <div class="progress-fill" style="width: @ProgressPercent%"></div>
+    </div>
+</div>
+
+@* ========== STEP 1: Personal Information ========== *@
+@if (_currentStep == 1)
+{
+    <div class="card">
+        <h2 class="card-title">Welcome Aboard!</h2>
+        <p class="card-subtitle">Let's start with a few details about you and your cruise.</p>
+
+        <EditForm Model="_personalInfo" OnValidSubmit="GoToStep2">
+            <DataAnnotationsValidator />
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <InputText id="firstName" @bind-Value="_personalInfo.FirstName" placeholder="Enter your first name" />
+                    <ValidationMessage For="@(() => _personalInfo.FirstName)" />
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <InputText id="lastName" @bind-Value="_personalInfo.LastName" placeholder="Enter your last name" />
+                    <ValidationMessage For="@(() => _personalInfo.LastName)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <InputText id="email" @bind-Value="_personalInfo.Email" placeholder="you@example.com" />
+                <ValidationMessage For="@(() => _personalInfo.Email)" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">Age Range</label>
+                    <InputSelect id="age" @bind-Value="_personalInfo.AgeRange">
+                        <option value="">-- Select --</option>
+                        <option value="18-25">18 - 25</option>
+                        <option value="26-35">26 - 35</option>
+                        <option value="36-45">36 - 45</option>
+                        <option value="46-55">46 - 55</option>
+                        <option value="56-65">56 - 65</option>
+                        <option value="65+">65+</option>
+                    </InputSelect>
+                    <ValidationMessage For="@(() => _personalInfo.AgeRange)" />
+                </div>
+                <div class="form-group">
+                    <label for="ship">Cruise Ship Name</label>
+                    <InputText id="ship" @bind-Value="_personalInfo.CruiseShipName" placeholder="e.g. Royal Voyager" />
+                    <ValidationMessage For="@(() => _personalInfo.CruiseShipName)" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departure">Departure Date</label>
+                    <InputDate id="departure" @bind-Value="_personalInfo.DepartureDate" />
+                    <ValidationMessage For="@(() => _personalInfo.DepartureDate)" />
+                </div>
+                <div class="form-group">
+                    <label for="nights">Number of Nights</label>
+                    <InputNumber id="nights" @bind-Value="_personalInfo.NumberOfNights" placeholder="e.g. 7" />
+                    <ValidationMessage For="@(() => _personalInfo.NumberOfNights)" />
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <span></span>
+                <button type="submit" class="btn btn-primary">Continue to Survey &rarr;</button>
+            </div>
+        </EditForm>
+    </div>
+}
+
+@* ========== STEP 2: Survey Questions ========== *@
+@if (_currentStep == 2)
+{
+    <div class="card" style="padding: 1.25rem 1.5rem;">
+        <h2 class="card-title">Rate Your Experience</h2>
+        <p class="card-subtitle">Please rate each aspect of your cruise from 1 (Poor) to 5 (Excellent). Optional comments are welcome!</p>
+    </div>
+
+    @foreach (var question in SurveyQuestions.Questions)
+    {
+        <div class="question-block">
+            <div class="question-number">Question @question.Id of 10</div>
+            <div class="question-category">@question.Category</div>
+            <div class="question-text">@question.QuestionText</div>
+
+            <div class="star-rating">
+                @for (int star = 1; star <= 5; star++)
+                {
+                    var s = star;
+                    var currentRating = _ratings.GetValueOrDefault(question.Id, 0);
+                    <button type="button"
+                            class="star-btn @(s <= currentRating ? "filled" : "")"
+                            @onclick="() => SetRating(question.Id, s)"
+                            aria-label="@s stars">&#9733;</button>
+                }
+            </div>
+            <div class="rating-label">
+                @{
+                    var r = _ratings.GetValueOrDefault(question.Id, 0);
+                }
+                @if (r == 0) { <span>Select a rating</span> }
+                else if (r == 1) { <span>Poor</span> }
+                else if (r == 2) { <span>Below Average</span> }
+                else if (r == 3) { <span>Average</span> }
+                else if (r == 4) { <span>Good</span> }
+                else { <span>Excellent</span> }
+            </div>
+
+            @if (_showComment.Contains(question.Id))
+            {
+                <div class="comment-box">
+                    <textarea placeholder="Share your thoughts (optional)..."
+                              @bind="_commentsText[question.Id]"
+                              @bind:event="oninput"></textarea>
+                </div>
+            }
+            else
+            {
+                <button class="comment-toggle" @onclick="() => ToggleComment(question.Id)">
+                    + Add a comment
+                </button>
+            }
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(_surveyError))
+    {
+        <div style="color: var(--error); font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+            @_surveyError
+        </div>
+    }
+
+    <div class="btn-row">
+        <button type="button" class="btn btn-secondary" @onclick="GoBackToStep1">&larr; Back</button>
+        <button type="button" class="btn btn-success" @onclick="SubmitSurvey" disabled="@_isSubmitting">
+            @if (_isSubmitting)
+            {
+                <span>Saving...</span>
+            }
+            else
+            {
+                <span>Submit Survey &#10003;</span>
+            }
+        </button>
+    </div>
+}
+
+@* ========== STEP 3: Completion ========== *@
+@if (_currentStep == 3)
+{
+    <div class="completion-card">
+        <div class="completion-icon">&#9989;</div>
+        <h2>Thank You, @_personalInfo.FirstName!</h2>
+        <p>Your cruise experience survey has been submitted and saved successfully.</p>
+
+        <div class="file-path">@_savedFilePath</div>
+
+        <div class="summary-preview">
+            <h3>Your Response Summary</h3>
+            @foreach (var q in SurveyQuestions.Questions)
+            {
+                var rating = _ratings.GetValueOrDefault(q.Id, 0);
+                var stars = new string('★', rating) + new string('☆', 5 - rating);
+                <div class="summary-row">
+                    <span class="label">@q.Category</span>
+                    <span class="stars">@stars</span>
+                </div>
+            }
+            <div class="overall-score">
+                <span class="label">Overall Average</span>
+                <span class="value">@(_ratings.Values.Any() ? _ratings.Values.Average().ToString("F1") : "0.0") / 5.0</span>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" @onclick="StartOver">Take Another Survey</button>
+    </div>
+}
+
+@code {
+    private int _currentStep = 1;
+    private PersonalInfo _personalInfo = new();
+    private Dictionary<int, int> _ratings = new();
+    private Dictionary<int, string> _commentsText = new();
+    private HashSet<int> _showComment = new();
+    private string? _savedFilePath;
+    private string? _surveyError;
+    private bool _isSubmitting;
+
+    private int ProgressPercent => _currentStep switch
+    {
+        1 => 15,
+        2 => 55,
+        3 => 100,
+        _ => 0
+    };
+
+    private string StepClass(int step)
+    {
+        if (step < _currentStep) return "completed";
+        if (step == _currentStep) return "active";
+        return "";
+    }
+
+    private void GoToStep2()
+    {
+        _currentStep = 2;
+    }
+
+    private void GoBackToStep1()
+    {
+        _surveyError = null;
+        _currentStep = 1;
+    }
+
+    private void SetRating(int questionId, int rating)
+    {
+        _ratings[questionId] = rating;
+    }
+
+    private void ToggleComment(int questionId)
+    {
+        _showComment.Add(questionId);
+        _commentsText.TryAdd(questionId, "");
+    }
+
+    private async Task SubmitSurvey()
+    {
+        var unanswered = SurveyQuestions.Questions
+            .Where(q => !_ratings.ContainsKey(q.Id) || _ratings[q.Id] == 0)
+            .ToList();
+
+        if (unanswered.Any())
+        {
+            _surveyError = $"Please rate all questions. Missing: {string.Join(", ", unanswered.Select(q => q.Category))}.";
+            return;
+        }
+
+        _surveyError = null;
+        _isSubmitting = true;
+
+        var response = new SurveyResponse
+        {
+            PersonalInfo = _personalInfo,
+            Ratings = new Dictionary<int, int>(_ratings),
+            Comments = _commentsText
+                .Where(c => !string.IsNullOrWhiteSpace(c.Value))
+                .ToDictionary(c => c.Key, c => c.Value),
+            CompletedAt = DateTime.Now
+        };
+
+        _savedFilePath = await SurveyService.SaveSurveyResultsAsync(response);
+        _isSubmitting = false;
+        _currentStep = 3;
+    }
+
+    private void StartOver()
+    {
+        _personalInfo = new PersonalInfo();
+        _ratings.Clear();
+        _commentsText.Clear();
+        _showComment.Clear();
+        _savedFilePath = null;
+        _surveyError = null;
+        _currentStep = 1;
+    }
+}
