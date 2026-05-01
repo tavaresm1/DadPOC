@@ -1,0 +1,160 @@
+@page "/results"
+@inject SurveyService SurveyService
+
+<div class="card">
+    <h2 class="card-title">Survey Results Dashboard</h2>
+    <p class="card-subtitle">All completed cruise experience surveys are listed below.</p>
+</div>
+
+@if (_loading)
+{
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <p style="color: var(--text-muted);">Loading survey data...</p>
+    </div>
+}
+else if (_surveys.Count == 0)
+{
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#128203;</div>
+        <h3 style="color: var(--ocean-dark);">No Surveys Yet</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">No one has completed a survey yet. Be the first!</p>
+        <a href="/" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Take a Survey</a>
+    </div>
+}
+else
+{
+    <div class="results-stats-bar">
+        <div class="stat-item">
+            <span class="stat-value">@_surveys.Count</span>
+            <span class="stat-label">Total Surveys</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">@(_surveys.Average(s => (double)s.AverageRating).ToString("F1"))</span>
+            <span class="stat-label">Avg Rating</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">@_surveys.Select(s => s.CruiseShipName).Distinct().Count()</span>
+            <span class="stat-label">Ships Reviewed</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">@_surveys.Min(s => s.CompletedAt).ToString("MMM dd")</span>
+            <span class="stat-label">First Survey</span>
+        </div>
+    </div>
+
+    @foreach (var survey in _surveys)
+    {
+        <div class="result-card">
+            <div class="result-header" @onclick="() => ToggleDetail(survey.Id)">
+                <div class="result-header-left">
+                    <div class="result-name">@survey.FirstName @survey.LastName</div>
+                    <div class="result-meta">
+                        <span>@survey.CruiseShipName</span>
+                        <span class="meta-separator">|</span>
+                        <span>@survey.DepartureDate.ToString("MMM dd, yyyy")</span>
+                        <span class="meta-separator">|</span>
+                        <span>@survey.NumberOfNights nights</span>
+                    </div>
+                </div>
+                <div class="result-header-right">
+                    <div class="result-rating @RatingColorClass(survey.AverageRating)">
+                        @survey.AverageRating.ToString("F1")
+                    </div>
+                    <div class="result-date">@survey.CompletedAt.ToString("MMM dd, yyyy h:mm tt")</div>
+                    <span class="expand-icon">@(_expandedIds.Contains(survey.Id) ? "▲" : "▼")</span>
+                </div>
+            </div>
+
+            @if (_expandedIds.Contains(survey.Id))
+            {
+                <div class="result-detail">
+                    <div class="detail-info-row">
+                        <span class="detail-label">Email:</span>
+                        <span>@survey.Email</span>
+                    </div>
+                    <div class="detail-info-row">
+                        <span class="detail-label">Age Range:</span>
+                        <span>@survey.AgeRange</span>
+                    </div>
+
+                    <div class="detail-divider"></div>
+
+                    <div class="detail-ratings-grid">
+                        @foreach (var answer in survey.Answers.OrderBy(a => a.QuestionId))
+                        {
+                            var stars = new string('★', answer.Rating) + new string('☆', 5 - answer.Rating);
+                            <div class="detail-rating-item">
+                                <div class="detail-rating-category">@answer.Category</div>
+                                <div class="detail-rating-stars @RatingColorClass((decimal)answer.Rating)">@stars</div>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(answer.Comment))
+                            {
+                                <div class="detail-comment">
+                                    <em>"@answer.Comment"</em>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <div class="detail-divider"></div>
+
+                    <div class="detail-sentiment">
+                        <span class="detail-label">Sentiment:</span>
+                        <span class="@RatingColorClass(survey.AverageRating)" style="font-weight: 600;">
+                            @GetSentiment(survey.AverageRating)
+                        </span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+<div class="btn-row" style="justify-content: center; margin-top: 2rem;">
+    <a href="/" class="btn btn-primary" style="text-decoration: none;">Take a New Survey</a>
+    @if (_surveys.Count > 0)
+    {
+        <button class="btn btn-secondary" @onclick="LoadSurveys">Refresh Results</button>
+    }
+</div>
+
+@code {
+    private List<SurveySubmissionEntity> _surveys = new();
+    private HashSet<int> _expandedIds = new();
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSurveys();
+    }
+
+    private async Task LoadSurveys()
+    {
+        _loading = true;
+        _surveys = await SurveyService.GetAllSurveysAsync();
+        _loading = false;
+    }
+
+    private void ToggleDetail(int id)
+    {
+        if (!_expandedIds.Remove(id))
+            _expandedIds.Add(id);
+    }
+
+    private static string RatingColorClass(decimal rating) => rating switch
+    {
+        >= 4.5m => "rating-excellent",
+        >= 3.5m => "rating-good",
+        >= 2.5m => "rating-average",
+        _ => "rating-poor",
+    };
+
+    private static string GetSentiment(decimal avg) => avg switch
+    {
+        >= 4.5m => "Exceptional Experience",
+        >= 3.5m => "Positive Experience",
+        >= 2.5m => "Mixed Experience",
+        >= 1.5m => "Below Expectations",
+        _ => "Poor Experience",
+    };
+}

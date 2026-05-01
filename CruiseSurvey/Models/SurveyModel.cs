@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CruiseSurvey.Models;
 
@@ -56,3 +57,63 @@ public static class SurveyQuestions
 }
 
 public record SurveyQuestion(int Id, string Category, string QuestionText);
+
+[Table("SurveySubmissions")]
+public class SurveySubmissionEntity
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    [Required, StringLength(50)]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Required, StringLength(50)]
+    public string LastName { get; set; } = string.Empty;
+
+    [Required, StringLength(200)]
+    public string Email { get; set; } = string.Empty;
+
+    [Required, StringLength(20)]
+    public string AgeRange { get; set; } = string.Empty;
+
+    [Required, StringLength(100)]
+    public string CruiseShipName { get; set; } = string.Empty;
+
+    public DateTime DepartureDate { get; set; }
+
+    public int NumberOfNights { get; set; }
+
+    public DateTime CompletedAt { get; set; }
+
+    [Column(TypeName = "decimal(3,1)")]
+    public decimal AverageRating { get; set; }
+
+    public List<SurveyAnswerEntity> Answers { get; set; } = new();
+}
+
+[Table("SurveyAnswers")]
+public class SurveyAnswerEntity
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    public int SurveySubmissionId { get; set; }
+
+    public int QuestionId { get; set; }
+
+    [Required, StringLength(100)]
+    public string Category { get; set; } = string.Empty;
+
+    [Required, StringLength(500)]
+    public string QuestionText { get; set; } = string.Empty;
+
+    public int Rating { get; set; }
+
+    [StringLength(2000)]
+    public string? Comment { get; set; }
+
+    [ForeignKey(nameof(SurveySubmissionId))]
+    public SurveySubmissionEntity Submission { get; set; } = null!;
+}
