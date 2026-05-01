@@ -9,7 +9,7 @@
         <span class="@StepClass(3)">3. Complete</span>
     </div>
     <div class="progress-track">
-        <div class="progress-fill" style="width: @ProgressPercent%"></div>
+        <div class="progress-fill" style="width: @(ProgressPercent)%"></div>
     </div>
 </div>
 
@@ -20,7 +20,7 @@
         <h2 class="card-title">Welcome Aboard!</h2>
         <p class="card-subtitle">Let's start with a few details about you and your cruise.</p>
 
-        <EditForm Model="_personalInfo" OnValidSubmit="GoToStep2">
+        <EditForm Model="_personalInfo" OnValidSubmit="GoToStep2" FormName="personalInfoForm">
             <DataAnnotationsValidator />
 
             <div class="form-row">
