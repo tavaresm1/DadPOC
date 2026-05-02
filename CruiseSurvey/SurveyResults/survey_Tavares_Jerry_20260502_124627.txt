@@ -1,0 +1,65 @@
+======================================================
+           CRUISE EXPERIENCE SURVEY RESULTS            
+======================================================
+
+PERSONAL INFORMATION
+-------------------------------------------------------
+  Name:             Jerry Tavares
+  Email:            asshole@gmail.com
+  Age Range:        65+
+  Cruise Ship:      Ferry Ship 4Ever
+  Departure Date:   March 29, 2026
+  Number of Nights: 10
+  Survey Completed: May 02, 2026 12:46 PM
+
+SURVEY RESPONSES
+-------------------------------------------------------
+  Q1. Overall Experience
+      "How would you rate your overall cruise experience?"
+      Rating: 5/5
+      Comment: loved it
+
+  Q2. Cabin & Accommodations
+      "How satisfied were you with your cabin and accommodations?"
+      Rating: 5/5
+
+  Q3. Dining Experience
+      "How would you rate the quality of the food and dining options?"
+      Rating: 5/5
+
+  Q4. Entertainment & Activities
+      "How would you rate the onboard entertainment and activities?"
+      Rating: 5/5
+
+  Q5. Staff & Service
+      "How would you rate the friendliness and helpfulness of the crew?"
+      Rating: 5/5
+
+  Q6. Cleanliness
+      "How would you rate the cleanliness of the ship and facilities?"
+      Rating: 4/5
+
+  Q7. Shore Excursions
+      "How satisfied were you with the ports of call and shore excursions?"
+      Rating: 1/5
+
+  Q8. Value for Money
+      "How would you rate the overall value for the price you paid?"
+      Rating: 4/5
+
+  Q9. Embarkation & Debarkation
+      "How smooth was the boarding and departure process?"
+      Rating: 4/5
+
+  Q10. Likelihood to Recommend
+      "How likely are you to recommend this cruise to a friend or family member?"
+      Rating: 4/5
+
+-------------------------------------------------------
+  OVERALL AVERAGE SCORE: 4.2 / 5.0
+
+  SENTIMENT: Positive - Guest was generally satisfied with their cruise.
+
+=======================================================
+  End of Survey Report
+=======================================================
