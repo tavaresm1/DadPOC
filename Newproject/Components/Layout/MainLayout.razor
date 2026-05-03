@@ -1,19 +1,22 @@
 @inherits LayoutComponentBase
 
-<FluentLayout>
-    <FluentHeader>
-        <h3 style="margin: 0; color: white;">Customer Orders</h3>
-        <FluentSpacer />
-        <FluentAnchor Href="/" Appearance="Appearance.Stealth" Style="color: white;">Customers</FluentAnchor>
-    </FluentHeader>
-
-    <FluentBodyContent>
-        <div style="padding: 24px;">
-            @Body
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            <i class="bi bi-people-fill me-2"></i>Customer Orders
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/"><i class="bi bi-house-door me-1"></i>Home</a>
         </div>
-    </FluentBodyContent>
+    </div>
+</nav>
 
-    <FluentFooter>
-        <small>Customer Orders Management</small>
-    </FluentFooter>
-</FluentLayout>
+<main class="container py-4">
+    @Body
+</main>
+
+<footer class="border-top py-3 mt-auto">
+    <div class="container text-center text-muted small">
+        Customer Orders Management
+    </div>
+</footer>

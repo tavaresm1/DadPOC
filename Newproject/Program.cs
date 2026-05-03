@@ -2,14 +2,10 @@ using Newproject.Components;
 using Newproject.Data;
 using Newproject.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.FluentUI.AspNetCore.Components;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
-builder.Services.AddFluentUIComponents();
 
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
     options.UseSqlServer(DockerSqlServerService.ConnectionString));

@@ -2,73 +2,137 @@
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<AppDbContext> DbFactory
 
-<FluentLabel Typo="Typography.PageTitle">Customers</FluentLabel>
-<br />
-
-<FluentButton Appearance="Appearance.Accent" OnClick="ShowAddForm">
-    <FluentIcon Value="new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.PeopleAdd()" Slot="start" />
-    Add Customer
-</FluentButton>
-<br /><br />
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-0">Customers</h2>
+        <small class="text-muted">Manage your customer database</small>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAddForm">
+        <i class="bi bi-person-plus me-1"></i> Add Customer
+    </button>
+</div>
 
 @if (showForm)
 {
-    <FluentCard Style="padding: 20px; margin-bottom: 16px;">
-        <FluentLabel Typo="Typography.Subject">
-            @(editingCustomer.Id == 0 ? "New Customer" : "Edit Customer")
-        </FluentLabel>
-        <br />
-        <EditForm Model="editingCustomer" OnValidSubmit="SaveCustomer">
-            <DataAnnotationsValidator />
-            <FluentGrid Spacing="3">
-                <FluentGridItem xs="12" sm="3">
-                    <FluentTextField Label="First Name" @bind-Value="editingCustomer.FirstName" Required Style="width: 100%;" />
-                </FluentGridItem>
-                <FluentGridItem xs="12" sm="3">
-                    <FluentTextField Label="Last Name" @bind-Value="editingCustomer.LastName" Required Style="width: 100%;" />
-                </FluentGridItem>
-                <FluentGridItem xs="12" sm="3">
-                    <FluentTextField Label="Email" @bind-Value="editingCustomer.Email" TextFieldType="TextFieldType.Email" Required Style="width: 100%;" />
-                </FluentGridItem>
-                <FluentGridItem xs="12" sm="3">
-                    <FluentTextField Label="Phone" @bind-Value="editingCustomer.Phone" TextFieldType="TextFieldType.Tel" Style="width: 100%;" />
-                </FluentGridItem>
-            </FluentGrid>
-            <br />
-            <FluentStack Orientation="Orientation.Horizontal">
-                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Save</FluentButton>
-                <FluentButton Appearance="Appearance.Outline" OnClick="CancelForm">Cancel</FluentButton>
-            </FluentStack>
-        </EditForm>
-    </FluentCard>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0">
+                <i class="bi @(editingCustomer.Id == 0 ? "bi-person-plus" : "bi-pencil") me-2"></i>
+                @(editingCustomer.Id == 0 ? "New Customer" : "Edit Customer")
+            </h5>
+        </div>
+        <div class="card-body">
+            <EditForm Model="editingCustomer" OnValidSubmit="SaveCustomer">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" />
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">First Name</label>
+                        <InputText class="form-control" @bind-Value="editingCustomer.FirstName" placeholder="John" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Last Name</label>
+                        <InputText class="form-control" @bind-Value="editingCustomer.LastName" placeholder="Doe" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <InputText class="form-control" @bind-Value="editingCustomer.Email" placeholder="john@example.com" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Phone</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <InputText class="form-control" @bind-Value="editingCustomer.Phone" placeholder="(555) 123-4567" />
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-check-lg me-1"></i> Save
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelForm">
+                        <i class="bi bi-x-lg me-1"></i> Cancel
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
 }
 
 @if (customers == null)
 {
-    <FluentProgress />
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-2">Loading customers...</p>
+    </div>
 }
 else if (!customers.Any())
 {
-    <FluentLabel>No customers yet. Click "Add Customer" to create one.</FluentLabel>
+    <div class="text-center py-5">
+        <i class="bi bi-people display-1 text-muted"></i>
+        <p class="text-muted mt-3">No customers yet. Click <strong>"Add Customer"</strong> to get started.</p>
+    </div>
 }
 else
 {
-    <FluentDataGrid Items="@customers.AsQueryable()" GridTemplateColumns="1fr 1fr 0.8fr 0.5fr 0.8fr 1fr" Style="width: 100%;">
-        <PropertyColumn Title="Name" Property="@(c => c.FirstName + " " + c.LastName)" />
-        <PropertyColumn Title="Email" Property="@(c => c.Email)" />
-        <PropertyColumn Title="Phone" Property="@(c => c.Phone ?? "—")" />
-        <PropertyColumn Title="Orders" Property="@(c => c.Orders.Count)" />
-        <PropertyColumn Title="Created" Property="@(c => c.CreatedAt.ToString("yyyy-MM-dd"))" />
-        <TemplateColumn Title="Actions">
-            <FluentStack Orientation="Orientation.Horizontal">
-                <FluentAnchor Href="@($"/customer/{context.Id}")" Appearance="Appearance.Accent">Details</FluentAnchor>
-                <FluentButton Appearance="Appearance.Outline" OnClick="@(() => EditCustomer(context))">Edit</FluentButton>
-                <FluentButton Appearance="Appearance.Outline" OnClick="@(() => DeleteCustomer(context.Id))">
-                    <FluentIcon Value="new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size16.Delete()" Color="Color.Error" />
-                </FluentButton>
-            </FluentStack>
-        </TemplateColumn>
-    </FluentDataGrid>
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="table-light">
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th class="text-center">Orders</th>
+                        <th>Joined</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var customer in customers)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        @customer.FirstName[0]@customer.LastName[0]
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">@customer.FirstName @customer.LastName</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-muted">@customer.Email</td>
+                            <td class="text-muted">@(customer.Phone ?? "—")</td>
+                            <td class="text-center">
+                                <span class="badge rounded-pill @(customer.Orders.Count > 0 ? "bg-primary" : "bg-secondary bg-opacity-25 text-secondary")">
+                                    @customer.Orders.Count
+                                </span>
+                            </td>
+                            <td class="text-muted">@customer.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td class="text-end">
+                                <a href="/customer/@customer.Id" class="btn btn-sm btn-outline-primary me-1" title="View details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <button class="btn btn-sm btn-outline-warning me-1" @onclick="() => EditCustomer(customer)" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteCustomer(customer.Id)" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white border-top text-muted small">
+            @customers.Count customer@(customers.Count != 1 ? "s" : "") total
+        </div>
+    </div>
 }
 
 @code {
