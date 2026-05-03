@@ -1,0 +1,164 @@
+@page "/"
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<AppDbContext> DbFactory
+
+<h3>Customers</h3>
+
+<button class="btn btn-primary mb-3" @onclick="ShowAddForm">Add Customer</button>
+
+@if (showForm)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">@(editingCustomer.Id == 0 ? "New Customer" : "Edit Customer")</h5>
+            <EditForm Model="editingCustomer" OnValidSubmit="SaveCustomer">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" />
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label class="form-label">First Name</label>
+                        <InputText class="form-control" @bind-Value="editingCustomer.FirstName" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Last Name</label>
+                        <InputText class="form-control" @bind-Value="editingCustomer.LastName" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Email</label>
+                        <InputText class="form-control" @bind-Value="editingCustomer.Email" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Phone</label>
+                        <InputText class="form-control" @bind-Value="editingCustomer.Phone" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success me-2">Save</button>
+                <button type="button" class="btn btn-secondary" @onclick="CancelForm">Cancel</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@if (customers == null)
+{
+    <p>Loading...</p>
+}
+else if (!customers.Any())
+{
+    <p class="text-muted">No customers yet. Click "Add Customer" to create one.</p>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Orders</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.FirstName @customer.LastName</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.Phone</td>
+                    <td>@customer.Orders.Count</td>
+                    <td>@customer.CreatedAt.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <a href="/customer/@customer.Id" class="btn btn-sm btn-info me-1">Details</a>
+                        <button class="btn btn-sm btn-warning me-1" @onclick="() => EditCustomer(customer)">Edit</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteCustomer(customer.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Customer>? customers;
+    private Customer editingCustomer = new();
+    private bool showForm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCustomers();
+    }
+
+    private async Task LoadCustomers()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+        customers = await db.Customers
+            .Include(c => c.Orders)
+            .OrderBy(c => c.LastName)
+            .ThenBy(c => c.FirstName)
+            .ToListAsync();
+    }
+
+    private void ShowAddForm()
+    {
+        editingCustomer = new Customer();
+        showForm = true;
+    }
+
+    private void EditCustomer(Customer customer)
+    {
+        editingCustomer = new Customer
+        {
+            Id = customer.Id,
+            FirstName = customer.FirstName,
+            LastName = customer.LastName,
+            Email = customer.Email,
+            Phone = customer.Phone,
+            CreatedAt = customer.CreatedAt
+        };
+        showForm = true;
+    }
+
+    private void CancelForm()
+    {
+        showForm = false;
+    }
+
+    private async Task SaveCustomer()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        if (editingCustomer.Id == 0)
+        {
+            db.Customers.Add(editingCustomer);
+        }
+        else
+        {
+            var existing = await db.Customers.FindAsync(editingCustomer.Id);
+            if (existing != null)
+            {
+                existing.FirstName = editingCustomer.FirstName;
+                existing.LastName = editingCustomer.LastName;
+                existing.Email = editingCustomer.Email;
+                existing.Phone = editingCustomer.Phone;
+            }
+        }
+
+        await db.SaveChangesAsync();
+        showForm = false;
+        await LoadCustomers();
+    }
+
+    private async Task DeleteCustomer(int id)
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+        var customer = await db.Customers.FindAsync(id);
+        if (customer != null)
+        {
+            db.Customers.Remove(customer);
+            await db.SaveChangesAsync();
+        }
+        await LoadCustomers();
+    }
+}

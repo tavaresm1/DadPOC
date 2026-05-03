@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CruiseSurvey")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+911a96f142dddbd8006ef69791ea9509faf290d8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1811c9809baace156dbd0c85e58675688cf7ca2f")]
 [assembly: System.Reflection.AssemblyProductAttribute("CruiseSurvey")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CruiseSurvey")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

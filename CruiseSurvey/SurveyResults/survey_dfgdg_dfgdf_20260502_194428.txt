@@ -1,0 +1,65 @@
+======================================================
+           CRUISE EXPERIENCE SURVEY RESULTS            
+======================================================
+
+PERSONAL INFORMATION
+-------------------------------------------------------
+  Name:             dfgdf dfgdg
+  Email:            dfgdf@gmail.com
+  Age Range:        46-55
+  Cruise Ship:      sdfsdf
+  Departure Date:   May 05, 2026
+  Number of Nights: 1
+  Survey Completed: May 02, 2026 07:44 PM
+
+SURVEY RESPONSES
+-------------------------------------------------------
+  Q1. Overall Experience
+      "How would you rate your overall cruise experience?"
+      Rating: 4/5
+
+  Q2. Cabin & Accommodations
+      "How satisfied were you with your cabin and accommodations?"
+      Rating: 4/5
+
+  Q3. Dining Experience
+      "How would you rate the quality of the food and dining options?"
+      Rating: 5/5
+      Comment: fuck this
+
+  Q4. Entertainment & Activities
+      "How would you rate the onboard entertainment and activities?"
+      Rating: 1/5
+
+  Q5. Staff & Service
+      "How would you rate the friendliness and helpfulness of the crew?"
+      Rating: 1/5
+
+  Q6. Cleanliness
+      "How would you rate the cleanliness of the ship and facilities?"
+      Rating: 2/5
+
+  Q7. Shore Excursions
+      "How satisfied were you with the ports of call and shore excursions?"
+      Rating: 1/5
+
+  Q8. Value for Money
+      "How would you rate the overall value for the price you paid?"
+      Rating: 1/5
+
+  Q9. Embarkation & Debarkation
+      "How smooth was the boarding and departure process?"
+      Rating: 1/5
+
+  Q10. Likelihood to Recommend
+      "How likely are you to recommend this cruise to a friend or family member?"
+      Rating: 1/5
+
+-------------------------------------------------------
+  OVERALL AVERAGE SCORE: 2.1 / 5.0
+
+  SENTIMENT: Below Expectations - Guest was largely dissatisfied.
+
+=======================================================
+  End of Survey Report
+=======================================================
