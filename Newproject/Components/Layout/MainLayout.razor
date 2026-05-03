@@ -1,16 +1,19 @@
 @inherits LayoutComponentBase
 
-<div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="/">Customer Orders</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/">Customers</a>
-            </div>
-        </div>
-    </nav>
+<FluentLayout>
+    <FluentHeader>
+        <h3 style="margin: 0; color: white;">Customer Orders</h3>
+        <FluentSpacer />
+        <FluentAnchor Href="/" Appearance="Appearance.Stealth" Style="color: white;">Customers</FluentAnchor>
+    </FluentHeader>
 
-    <div class="container">
-        @Body
-    </div>
-</div>
+    <FluentBodyContent>
+        <div style="padding: 24px;">
+            @Body
+        </div>
+    </FluentBodyContent>
+
+    <FluentFooter>
+        <small>Customer Orders Management</small>
+    </FluentFooter>
+</FluentLayout>

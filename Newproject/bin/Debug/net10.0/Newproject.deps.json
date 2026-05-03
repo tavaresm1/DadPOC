@@ -9,7 +9,9 @@
       "Newproject/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.0-preview.4.25258.110",
-          "Microsoft.EntityFrameworkCore.Tools": "10.0.0-preview.4.25258.110"
+          "Microsoft.EntityFrameworkCore.Tools": "10.0.0-preview.4.25258.110",
+          "Microsoft.FluentUI.AspNetCore.Components": "4.14.1",
+          "Microsoft.FluentUI.AspNetCore.Components.Icons": "4.14.1"
         },
         "runtime": {
           "Newproject.dll": {}
@@ -576,6 +578,41 @@
           }
         }
       },
+      "Microsoft.FluentUI.AspNetCore.Components/4.14.1": {
+        "runtime": {
+          "lib/net10.0/Microsoft.FluentUI.AspNetCore.Components.dll": {
+            "assemblyVersion": "4.14.1.26112",
+            "fileVersion": "4.14.1.26112"
+          }
+        }
+      },
+      "Microsoft.FluentUI.AspNetCore.Components.Icons/4.14.1": {
+        "dependencies": {
+          "Microsoft.FluentUI.AspNetCore.Components": "4.14.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.FluentUI.AspNetCore.Components.Icons.Color.dll": {
+            "assemblyVersion": "4.14.1.26112",
+            "fileVersion": "4.14.1.26112"
+          },
+          "lib/net8.0/Microsoft.FluentUI.AspNetCore.Components.Icons.Filled.dll": {
+            "assemblyVersion": "4.14.1.26112",
+            "fileVersion": "4.14.1.26112"
+          },
+          "lib/net8.0/Microsoft.FluentUI.AspNetCore.Components.Icons.Light.dll": {
+            "assemblyVersion": "4.14.1.26112",
+            "fileVersion": "4.14.1.26112"
+          },
+          "lib/net8.0/Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.dll": {
+            "assemblyVersion": "4.14.1.26112",
+            "fileVersion": "4.14.1.26112"
+          },
+          "lib/net8.0/Microsoft.FluentUI.AspNetCore.Components.Icons.dll": {
+            "assemblyVersion": "4.14.1.26112",
+            "fileVersion": "4.14.1.26112"
+          }
+        }
+      },
       "Microsoft.Identity.Client/4.61.3": {
         "dependencies": {
           "Microsoft.IdentityModel.Abstractions": "7.5.0"
@@ -1042,6 +1079,20 @@
       "sha512": "sha512-zLCtRpYHm0Ly6nIdKObNQq7dp4XmJ/ePH5HutFhmr/ELGjIa9fr6wBNuI8aNe58wi0tWjDvZ0arQlOw5FvbMfw==",
       "path": "microsoft.extensions.dependencymodel/10.0.0-preview.4.25258.110",
       "hashPath": "microsoft.extensions.dependencymodel.10.0.0-preview.4.25258.110.nupkg.sha512"
+    },
+    "Microsoft.FluentUI.AspNetCore.Components/4.14.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dfP20+kxwiI8Ppgp1SDwfsv/QImi5CPqq9oRzP0YdvJ8b+Gtgtrrcm87+2P5hxEEyRsTn3y4Hy+lafOhy+JdAQ==",
+      "path": "microsoft.fluentui.aspnetcore.components/4.14.1",
+      "hashPath": "microsoft.fluentui.aspnetcore.components.4.14.1.nupkg.sha512"
+    },
+    "Microsoft.FluentUI.AspNetCore.Components.Icons/4.14.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-l/BMGYhnEemHJKw3By2gjSDE5Ba5ie2otr3+sXwpqktJ4PZvYP6vO4WuaVTKKlx++J8CBenz8UT0eem6M0x7vg==",
+      "path": "microsoft.fluentui.aspnetcore.components.icons/4.14.1",
+      "hashPath": "microsoft.fluentui.aspnetcore.components.icons.4.14.1.nupkg.sha512"
     },
     "Microsoft.Identity.Client/4.61.3": {
       "type": "package",

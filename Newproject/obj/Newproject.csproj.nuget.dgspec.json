@@ -59,6 +59,14 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[10.0.0-preview.4.25258.110, )"
+            },
+            "Microsoft.FluentUI.AspNetCore.Components": {
+              "target": "Package",
+              "version": "[4.14.1, )"
+            },
+            "Microsoft.FluentUI.AspNetCore.Components.Icons": {
+              "target": "Package",
+              "version": "[4.14.1, )"
             }
           },
           "imports": [

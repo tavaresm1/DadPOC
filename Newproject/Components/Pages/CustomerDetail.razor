@@ -5,108 +5,95 @@
 
 @if (customer == null)
 {
-    <p>Loading...</p>
+    <FluentProgress />
 }
 else
 {
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Customers</a></li>
-            <li class="breadcrumb-item active">@customer.FirstName @customer.LastName</li>
-        </ol>
-    </nav>
+    <FluentBreadcrumb>
+        <FluentBreadcrumbItem Href="/">Customers</FluentBreadcrumbItem>
+        <FluentBreadcrumbItem>@customer.FirstName @customer.LastName</FluentBreadcrumbItem>
+    </FluentBreadcrumb>
+    <br />
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>@customer.FirstName @customer.LastName</h4>
-        </div>
-        <div class="card-body">
-            <p><strong>Email:</strong> @customer.Email</p>
-            <p><strong>Phone:</strong> @(customer.Phone ?? "—")</p>
-            <p><strong>Customer since:</strong> @customer.CreatedAt.ToString("yyyy-MM-dd")</p>
-        </div>
-    </div>
+    <FluentCard Style="padding: 20px; margin-bottom: 16px;">
+        <FluentLabel Typo="Typography.PageTitle">@customer.FirstName @customer.LastName</FluentLabel>
+        <br />
+        <FluentGrid Spacing="3">
+            <FluentGridItem xs="12" sm="4">
+                <FluentLabel Typo="Typography.Body"><strong>Email:</strong> @customer.Email</FluentLabel>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="4">
+                <FluentLabel Typo="Typography.Body"><strong>Phone:</strong> @(customer.Phone ?? "—")</FluentLabel>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="4">
+                <FluentLabel Typo="Typography.Body"><strong>Customer since:</strong> @customer.CreatedAt.ToString("yyyy-MM-dd")</FluentLabel>
+            </FluentGridItem>
+        </FluentGrid>
+    </FluentCard>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>Orders</h4>
-        <button class="btn btn-primary" @onclick="ShowAddOrderForm">Add Order</button>
-    </div>
+    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.SpaceBetween" Style="margin-bottom: 16px;">
+        <FluentLabel Typo="Typography.PageTitle">Orders</FluentLabel>
+        <FluentButton Appearance="Appearance.Accent" OnClick="ShowAddOrderForm">
+            <FluentIcon Value="new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.AddCircle()" Slot="start" />
+            Add Order
+        </FluentButton>
+    </FluentStack>
 
     @if (showOrderForm)
     {
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">@(editingOrder.Id == 0 ? "New Order" : "Edit Order")</h5>
-                <EditForm Model="editingOrder" OnValidSubmit="SaveOrder">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary class="text-danger" />
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label class="form-label">Description</label>
-                            <InputText class="form-control" @bind-Value="editingOrder.Description" />
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">Amount</label>
-                            <InputNumber class="form-control" @bind-Value="editingOrder.Amount" />
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Order Date</label>
-                            <InputDate class="form-control" @bind-Value="editingOrder.OrderDate" />
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Status</label>
-                            <InputSelect class="form-select" @bind-Value="editingOrder.Status">
-                                <option value="Pending">Pending</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Shipped">Shipped</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </InputSelect>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-success me-2">Save</button>
-                    <button type="button" class="btn btn-secondary" @onclick="CancelOrderForm">Cancel</button>
-                </EditForm>
-            </div>
-        </div>
+        <FluentCard Style="padding: 20px; margin-bottom: 16px;">
+            <FluentLabel Typo="Typography.Subject">
+                @(editingOrder.Id == 0 ? "New Order" : "Edit Order")
+            </FluentLabel>
+            <br />
+            <EditForm Model="editingOrder" OnValidSubmit="SaveOrder">
+                <DataAnnotationsValidator />
+                <FluentGrid Spacing="3">
+                    <FluentGridItem xs="12" sm="4">
+                        <FluentTextField Label="Description" @bind-Value="editingOrder.Description" Required Style="width: 100%;" />
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="2">
+                        <FluentNumberField TValue="decimal" Label="Amount" @bind-Value="editingOrder.Amount" Style="width: 100%;" />
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="3">
+                        <FluentDatePicker Label="Order Date" @bind-Value="orderDate" Style="width: 100%;" />
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="3">
+                        <FluentSelect Label="Status" @bind-Value="editingOrder.Status" Items="@statusOptions" OptionValue="@(s => s)" OptionText="@(s => s)" Style="width: 100%;" />
+                    </FluentGridItem>
+                </FluentGrid>
+                <br />
+                <FluentStack Orientation="Orientation.Horizontal">
+                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Save</FluentButton>
+                    <FluentButton Appearance="Appearance.Outline" OnClick="CancelOrderForm">Cancel</FluentButton>
+                </FluentStack>
+            </EditForm>
+        </FluentCard>
     }
 
     @if (!customer.Orders.Any())
     {
-        <p class="text-muted">No orders yet for this customer.</p>
+        <FluentLabel>No orders yet for this customer.</FluentLabel>
     }
     else
     {
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Order #</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in customer.Orders.OrderByDescending(o => o.OrderDate))
-                {
-                    <tr>
-                        <td>@order.Id</td>
-                        <td>@order.Description</td>
-                        <td>@order.Amount.ToString("C")</td>
-                        <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                        <td>
-                            <span class="badge @GetStatusBadgeClass(order.Status)">@order.Status</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-warning me-1" @onclick="() => EditOrder(order)">Edit</button>
-                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteOrder(order.Id)">Delete</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <FluentDataGrid Items="@customer.Orders.OrderByDescending(o => o.OrderDate).AsQueryable()" GridTemplateColumns="0.5fr 1.5fr 0.8fr 0.8fr 0.8fr 1fr" Style="width: 100%;">
+            <PropertyColumn Title="Order #" Property="@(o => o.Id)" />
+            <PropertyColumn Title="Description" Property="@(o => o.Description)" />
+            <PropertyColumn Title="Amount" Property="@(o => o.Amount)" Format="C" />
+            <PropertyColumn Title="Date" Property="@(o => o.OrderDate.ToString("yyyy-MM-dd"))" />
+            <TemplateColumn Title="Status">
+                <FluentBadge Appearance="@GetStatusAppearance(context.Status)">@context.Status</FluentBadge>
+            </TemplateColumn>
+            <TemplateColumn Title="Actions">
+                <FluentStack Orientation="Orientation.Horizontal">
+                    <FluentButton Appearance="Appearance.Outline" OnClick="@(() => EditOrder(context))">Edit</FluentButton>
+                    <FluentButton Appearance="Appearance.Outline" OnClick="@(() => DeleteOrder(context.Id))">
+                        <FluentIcon Value="new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size16.Delete()" Color="Color.Error" />
+                    </FluentButton>
+                </FluentStack>
+            </TemplateColumn>
+        </FluentDataGrid>
     }
 }
 
@@ -117,6 +104,14 @@ else
     private Customer? customer;
     private Order editingOrder = new();
     private bool showOrderForm;
+
+    private DateTime? orderDate
+    {
+        get => editingOrder.OrderDate;
+        set => editingOrder.OrderDate = value ?? DateTime.UtcNow;
+    }
+
+    private static readonly string[] statusOptions = { "Pending", "Processing", "Shipped", "Delivered", "Cancelled" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -199,13 +194,13 @@ else
         await LoadCustomer();
     }
 
-    private static string GetStatusBadgeClass(string status) => status switch
+    private static Appearance GetStatusAppearance(string status) => status switch
     {
-        "Pending" => "bg-warning text-dark",
-        "Processing" => "bg-info text-dark",
-        "Shipped" => "bg-primary",
-        "Delivered" => "bg-success",
-        "Cancelled" => "bg-danger",
-        _ => "bg-secondary"
+        "Pending" => Appearance.Lightweight,
+        "Processing" => Appearance.Accent,
+        "Shipped" => Appearance.Accent,
+        "Delivered" => Appearance.Accent,
+        "Cancelled" => Appearance.Neutral,
+        _ => Appearance.Neutral
     };
 }
